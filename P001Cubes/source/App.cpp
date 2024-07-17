@@ -76,7 +76,11 @@ void App::onInit() {
 
     // Call setScene(shared_ptr<Scene>()) or setScene(MyScene::create()) to replace
     // the default scene here.
-    
+    debugPrintf("Target frame rate = %f Hz\n", 1.0f / realTimeTargetDuration());
+
+    //const shared_ptr< Entity >& sphere = scene()->entity("Sphere");
+    //sphere->setFrame(Point3(0.0f, 1.5f, 0.0f));
+
     showRenderingStats      = false;
 
     loadScene(
