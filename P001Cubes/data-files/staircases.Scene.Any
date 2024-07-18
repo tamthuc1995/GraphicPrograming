@@ -1,0 +1,276 @@
+{ 
+    entities = { 
+        "box0.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 0, 0 ); 
+            model = "box"; 
+        }; 
+        
+        "box1.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 0.1, 0, 16 ); 
+            model = "box"; 
+        }; 
+        
+        "box10.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 1, 0, 160 ); 
+            model = "box"; 
+        }; 
+        
+        "box11.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 1.1, 0, 176 ); 
+            model = "box"; 
+        }; 
+        
+        "box12.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 1.2, 0, -168 ); 
+            model = "box"; 
+        }; 
+        
+        "box13.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 1.3, 0, -152 ); 
+            model = "box"; 
+        }; 
+        
+        "box14.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 1.4, 0, -136 ); 
+            model = "box"; 
+        }; 
+        
+        "box15.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 1.5, 0, -120 ); 
+            model = "box"; 
+        }; 
+        
+        "box16.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 1.6, 0, -104 ); 
+            model = "box"; 
+        }; 
+        
+        "box17.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 1.7, 0, -88 ); 
+            model = "box"; 
+        }; 
+        
+        "box18.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 1.8, 0, -72 ); 
+            model = "box"; 
+        }; 
+        
+        "box19.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 1.9, 0, -56 ); 
+            model = "box"; 
+        }; 
+        
+        "box2.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 0.2, 0, 32 ); 
+            model = "box"; 
+        }; 
+        
+        "box20.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 2, 0, -40 ); 
+            model = "box"; 
+        }; 
+        
+        "box21.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 2.1, 0, -24 ); 
+            model = "box"; 
+        }; 
+        
+        "box22.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 2.2, 0, -7.99997 ); 
+            model = "box"; 
+        }; 
+        
+        "box23.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 2.3, 0, 7.99999 ); 
+            model = "box"; 
+        }; 
+        
+        "box24.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 2.4, 0, 24 ); 
+            model = "box"; 
+        }; 
+        
+        "box25.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 2.5, 0, 40 ); 
+            model = "box"; 
+        }; 
+        
+        "box26.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 2.6, 0, 56 ); 
+            model = "box"; 
+        }; 
+        
+        "box27.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 2.7, 0, 72 ); 
+            model = "box"; 
+        }; 
+        
+        "box28.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 2.8, 0, 88 ); 
+            model = "box"; 
+        }; 
+        
+        "box29.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 2.9, 0, 104 ); 
+            model = "box"; 
+        }; 
+        
+        "box3.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 0.3, 0, 48 ); 
+            model = "box"; 
+        }; 
+        
+        "box30.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 3, 0, 120 ); 
+            model = "box"; 
+        }; 
+        
+        "box31.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 3.1, 0, 136 ); 
+            model = "box"; 
+        }; 
+        
+        "box32.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 3.2, 0, 152 ); 
+            model = "box"; 
+        }; 
+        
+        "box33.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 3.3, 0, 168 ); 
+            model = "box"; 
+        }; 
+        
+        "box34.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 3.4, 0, -176 ); 
+            model = "box"; 
+        }; 
+        
+        "box35.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 3.5, 0, -160 ); 
+            model = "box"; 
+        }; 
+        
+        "box36.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 3.6, 0, -144 ); 
+            model = "box"; 
+        }; 
+        
+        "box37.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 3.7, 0, -128 ); 
+            model = "box"; 
+        }; 
+        
+        "box38.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 3.8, 0, -112 ); 
+            model = "box"; 
+        }; 
+        
+        "box39.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 3.9, 0, -96 ); 
+            model = "box"; 
+        }; 
+        
+        "box4.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 0.4, 0, 64 ); 
+            model = "box"; 
+        }; 
+        
+        "box40.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 4, 0, -80 ); 
+            model = "box"; 
+        }; 
+        
+        "box41.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 4.1, 0, -64 ); 
+            model = "box"; 
+        }; 
+        
+        "box42.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 4.2, 0, -48 ); 
+            model = "box"; 
+        }; 
+        
+        "box43.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 4.3, 0, -32 ); 
+            model = "box"; 
+        }; 
+        
+        "box44.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 4.4, 0, -15.9999 ); 
+            model = "box"; 
+        }; 
+        
+        "box45.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 4.5, 0, 2.00358e-05 ); 
+            model = "box"; 
+        }; 
+        
+        "box46.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 4.6, 0, 16 ); 
+            model = "box"; 
+        }; 
+        
+        "box47.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 4.7, 0, 32.0001 ); 
+            model = "box"; 
+        }; 
+        
+        "box48.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 4.8, 0, 48 ); 
+            model = "box"; 
+        }; 
+        
+        "box49.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 4.9, 0, 64 ); 
+            model = "box"; 
+        }; 
+        
+        "box5.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 0.5, 0, 80 ); 
+            model = "box"; 
+        }; 
+        
+        "box50.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 5, 0, 80 ); 
+            model = "box"; 
+        }; 
+        
+        "box6.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 0.6, 0, 96 ); 
+            model = "box"; 
+        }; 
+        
+        "box7.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 0.7, 0, 112 ); 
+            model = "box"; 
+        }; 
+        
+        "box8.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 0.8, 0, 128 ); 
+            model = "box"; 
+        }; 
+        
+        "box9.000000"= VisibleEntity { 
+            frame = CFrame::fromXYZYPRDegrees(0, 0.9, 0, 144 ); 
+            model = "box"; 
+        }; 
+        
+    }; 
+    
+    models = { 
+        box = ArticulatedModel::Specification { 
+            filename = "model/crate/crate.obj"; 
+            preprocess = ( 
+                setMaterial(
+                    all(), 
+                    "wood_texture.png"), 
+                transformGeometry(
+                    all(), 
+                    Matrix4::scale(0.4, 0.1, 2 ) ) ); 
+            
+        }; 
+        
+    }; 
+    
+    name = "Q23_SimpleStaircase"; 
+} 

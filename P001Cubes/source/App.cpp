@@ -1,6 +1,7 @@
 /** \file App.cpp */
 #include "App.h"
 
+
 // Tells C++ to invoke command-line main() function even on OS X and Win32.
 G3D_START_AT_MAIN();
 
@@ -69,6 +70,69 @@ App::App(const GApp::Settings& settings) : GApp(settings) {
 // Called before the application loop begins.  Load data here and
 // not in the constructor so that common exceptions will be
 // automatically caught.
+
+/**
+This function will create staircases Scene.Any during app init.
+*/
+
+void create_staircase(const G3D::GConsole::string& filename) {
+    Any a(Any::TABLE);
+    a["name"] = "Q23_SimpleStaircase";
+    
+    // Box model
+    Any models(Any::TABLE);
+    Any box01(Any::TABLE, "ArticulatedModel::Specification");
+    box01["filename"] = "model/crate/crate.obj";
+    Array<Any> instructs;
+
+    Any setMaterial(Any::ARRAY, "setMaterial");
+    Any all(Any::ARRAY, "all");
+    String texture("wood_texture.png");
+    setMaterial.append(all);
+    setMaterial.append(texture);
+    instructs.append(setMaterial);
+
+    Any transformGeometry(Any::ARRAY, "transformGeometry");
+    Any scale(Any::ARRAY, "Matrix4::scale");
+    scale.append(0.4);
+    scale.append(0.1);
+    scale.append(2.0);
+    transformGeometry.append(all);
+    transformGeometry.append(scale);
+    instructs.append(transformGeometry);
+    box01["preprocess"] = instructs;
+    models["box"] = box01;
+    a["models"] = models;
+
+
+    // Create list entities
+    Any entities(Any::TABLE);   
+    float stair_i(0.0f);
+    float y_val(0.0f);
+    float angle_val(0.0f);
+    String name;
+    while (stair_i < 51.0) {
+        name = "box" + to_string(stair_i);
+        Any entity_box01(Any::TABLE, "VisibleEntity");
+        entity_box01["model"] = "box";
+        y_val = stair_i * 0.1f;
+        angle_val = stair_i * 16.0f;
+        entity_box01["frame"] = CFrame::fromXYZYPRDegrees(0.0f, y_val, 0.0f, angle_val, 0.0f, 0.0f);
+        entities[name] = entity_box01;
+        ++stair_i;
+    }
+
+    a["entities"] = entities;
+
+
+    a.save(filename);
+};
+
+
+/** By default, G3D::GApp creates a G3D::FirstPersonManipulator that allows you to move the 3D camera. 
+I'm telling you the name of the class right now so that 
+you'll know how to find and configure it later, but right now all that you need to know is...video game controls work. */
+
 void App::onInit() {
     GApp::onInit();
 
@@ -77,6 +141,8 @@ void App::onInit() {
     // Call setScene(shared_ptr<Scene>()) or setScene(MyScene::create()) to replace
     // the default scene here.
     debugPrintf("Target frame rate = %f Hz\n", 1.0f / realTimeTargetDuration());
+
+    create_staircase("staircases.Scene.Any");
 
     //const shared_ptr< Entity >& sphere = scene()->entity("Sphere");
     //sphere->setFrame(Point3(0.0f, 1.5f, 0.0f));

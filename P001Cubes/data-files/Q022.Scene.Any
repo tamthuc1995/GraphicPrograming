@@ -1,0 +1,181 @@
+// -*- c++ -*-
+{
+    name = "Question2-2";
+
+    models = {
+        box01 = ArticulatedModel::Specification {
+          filename = "model/crate/crate.obj";
+          preprocess = {
+            setMaterial(all(), Color3(0, 0, 0));
+            transformGeometry(all(), Matrix4::scale(0.5, 0.5, 0.5));
+          };
+        };
+        box02 = ArticulatedModel::Specification{
+          filename = "model/crate/crate.obj";
+          preprocess = {
+            setMaterial(all(), Color3(0, 0, 0));
+            transformGeometry(all(), Matrix4::scale(0.5, 1.0, 0.5));
+          };
+        };
+
+        wallRed = ArticulatedModel::Specification {
+          filename = "model/crate/crate.obj";
+          preprocess = {
+            setMaterial(all(), Color3(1, 0, 0));
+            transformGeometry(all(), Matrix4::scale(0.01, 2.0, 2.0));
+          };
+        };
+
+        wallGreen = ArticulatedModel::Specification{
+          filename = "model/crate/crate.obj";
+          preprocess = {
+            setMaterial(all(), Color3(0, 1, 0));
+            transformGeometry(all(), Matrix4::scale(0.01, 2.0, 2.0));
+          };
+        };
+
+        wallWhite00 = ArticulatedModel::Specification{
+          filename = "model/crate/crate.obj";
+          preprocess = {
+            setMaterial(all(), Color3(1, 1, 1));
+            transformGeometry(all(), Matrix4::scale(2.0, 0.01, 2.0));
+          };
+        };
+
+        wallWhite01 = ArticulatedModel::Specification{
+          filename = "model/crate/crate.obj";
+          preprocess = {
+            setMaterial(all(), Color3(1, 1, 1));
+            transformGeometry(all(), Matrix4::scale(2.0, 2.0, 0.01));
+          };
+        };
+    };
+
+    lightingEnvironment = LightingEnvironment{
+        ambientOcclusionSettings = AmbientOcclusionSettings {
+            bias = 0.028125;
+            blurRadius = 2;
+            blurStepSize = 1;
+            depthPeelSeparationHint = 0.1;
+            edgeSharpness = 1;
+            enabled = true;
+            highQualityBlur = true;
+            intensity = 0.9;
+            monotonicallyDecreasingBilateralWeights = false;
+            numSamples = 48;
+            packBlurKeys = false;
+            radius = 0.46328;
+            temporalFilterSettings = TemporalFilter::Settings {
+                falloffEndDistance = 0.07;
+                falloffStartDistance = 0.05;
+                hysteresis = 0.9;
+            };
+
+            temporallyVarySamples = true;
+            useDepthPeelBuffer = true;
+            useNormalBuffer = true;
+            useNormalsInBlur = true;
+            zStorage = "HALF";
+        };
+
+        environmentMap = Texture::Specification {
+            encoding = Texture::Encoding {
+                readMultiplyFirst = 1;
+            };
+
+            filename = "cubemap/cornellbox/empty-RG-*.png";
+        };
+
+    };
+
+    entities = {
+        skybox = Skybox {
+            texture = "cubemap/whiteroom/whiteroom-*.png";
+        };
+
+        light1 = Light {
+            attenuation = (0, 0, 1);
+            bulbPower = Power3(30);
+            frame = CFrame::fromXYZYPRDegrees(0, 0, 0, 0, -90, 0);
+            shadowMapSize = Vector2int16(2048, 2048);
+            spotHalfAngleDegrees = 45;
+            rectangular = true;
+            type = "SPOT";
+        };
+
+        light2 = Light{
+            attenuation = (0, 0, 1);
+            bulbPower = Power3(30);
+            frame = CFrame::fromXYZYPRDegrees(0, 0, 0, 0, 90, 0);
+            shadowMapSize = Vector2int16(2048, 2048);
+            spotHalfAngleDegrees = 45;
+            rectangular = true;
+            type = "SPOT";
+        };
+        light3 = Light{
+            attenuation = (0, 0, 1);
+            bulbPower = Power3(30);
+            frame = CFrame::fromXYZYPRDegrees(-0.1, 0, 0, 90, 0, 0);
+            shadowMapSize = Vector2int16(2048, 2048);
+            spotHalfAngleDegrees = 48.1;
+            rectangular = true;
+            type = "SPOT";
+        };
+        light4 = Light{
+            attenuation = (0, 0, 1);
+            bulbPower = Power3(30);
+            frame = CFrame::fromXYZYPRDegrees(0.1, 0, 0, -90, 0, 0);
+            shadowMapSize = Vector2int16(2048, 2048);
+            spotHalfAngleDegrees = 48.1;
+            rectangular = true;
+            type = "SPOT";
+        };
+        light5 = Light{
+            attenuation = (0, 0, 1);
+            bulbPower = Power3(30);
+            frame = CFrame::fromXYZYPRDegrees(0, 0, 0, 0, 0, 0);
+            shadowMapSize = Vector2int16(2048, 2048);
+            spotHalfAngleDegrees = 45;
+            rectangular = true;
+            type = "SPOT";
+        };
+
+        wall00 = VisibleEntity {
+            model = "wallRed";
+            frame = CFrame::fromXYZYPRDegrees(1, 0, 0, 0, 0, 0);
+        };
+
+        wall01 = VisibleEntity{
+            model = "wallGreen";
+            frame = CFrame::fromXYZYPRDegrees(-1, 0, 0, 0, 0, 0);
+        };
+
+        wall02 = VisibleEntity{
+            model = "wallWhite00";
+            frame = CFrame::fromXYZYPRDegrees(0, -1, 0, 0, 0, 0);
+        };
+        wall03 = VisibleEntity{
+            model = "wallWhite00";
+            frame = CFrame::fromXYZYPRDegrees(0, 1, 0, 0, 0, 0);
+        };
+        wall04 = VisibleEntity{
+            model = "wallWhite01";
+            frame = CFrame::fromXYZYPRDegrees(0, 0, -1, 0, 0, 0);
+        };
+
+        box01 = VisibleEntity{
+            model = "box01";
+            frame = CFrame::fromXYZYPRDegrees(0.3, -0.75, 0.3, 45, 0, 0);
+        };
+
+        box02 = VisibleEntity{
+            model = "box02";
+            frame = CFrame::fromXYZYPRDegrees(-0.3, -0.5, -0.3, 0, 0, 0);
+        };
+
+        camera = Camera{
+            frame = CFrame::fromXYZYPRDegrees(0, 0, 5, 0, 0, 0);
+        };
+    };
+
+};

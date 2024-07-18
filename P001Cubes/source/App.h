@@ -7,6 +7,10 @@
 #pragma once
 #include <G3D/G3D.h>
 
+#include <string> // Standard header
+#include <vector>
+
+
 /** \brief Application framework. */
 class App : public GApp {
 protected:
