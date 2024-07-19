@@ -3,14 +3,29 @@
 
 
 
+2024-07-19: Date 19 /07/2024
+=============================================================
+1. What are the differences between the Scene* and shared_ptr<scene> data types in C++?
+    + One is pointer and one is reference
+2. How does G3D know where the scene files are located?
+    + By the atr dataDir in setting when create GApp setting in main(...)
+    + Also, dateDir is currently assigned with current working directory that can be changed in Solution properties
+3. Why should you to put your initialization code into App::onInit instead 
+    of constructor App::App? 
+    + The full initialization can be heavy, you want the object is constructed fast before put data into the object
+4. What is the call chain that invokes App::onGraphics3D?
+    + Contructor -> run -> onRun -> beginRun -> onInit  -> loadScene -> onGraphic -> onGraphic3D
+5. Where is the file cube.obj stored on the file system? How did the Scene parser know to load it from there?
+    + the specification finally trace to G3D::ArticulatedModel::load 
+        where the function loadOBJ(specification) is used.
+        first an instance of specification is created with input Any spec, 
+        then specification.filename later on got resolved into full path by function
+        Any::resolveStringAsFilename, check function System::findDataFile where a list of directory are checked
+        String G3D::System::findDataFile: https://casual-effects.com/g3d/G3D10/build/manual/class_g3_d_1_1_system.html#acd234ebe6dde1886a89f9fc832d07953
 
 2024-07-18: Date 18 /07/2024
 =============================================================
-![](2024-07-18__002.jpg)
-
-
-![](2024-07-18__001.jpg)
-
+![Finish Staircase](2024-07-18__002.jpg)
 
 
 ![Finish Cornell Box](2024-07-18__000_Finish_Cornell_Box.jpg)
@@ -26,7 +41,7 @@ of the starter program's scene editing GUI and manual file editing.
 
 ![](2024-07-17__001.jpg)
 
-A single, white 1 m3 cube rotated 45° about the vertical axis, with center at
+A single, white 1 m3 cube rotated 45ï¿½ about the vertical axis, with center at
 (0m, 0m, -2m), created by manually editing a scene file.
 
 

@@ -58,7 +58,7 @@ int main(int argc, const char* argv[]) {
     settings.screenCapture.includeAppRevision = false;
     settings.screenCapture.includeG3DRevision = false;
     settings.screenCapture.filenamePrefix = "_";
-
+    
     return App(settings).run();
 }
 
@@ -148,15 +148,15 @@ void App::onInit() {
     //sphere->setFrame(Point3(0.0f, 1.5f, 0.0f));
 
     showRenderingStats      = false;
-
-    loadScene(
-
-#       ifndef G3D_DEBUG
-        "G3D Sponza"
-#       else
-        "G3D Simple Cornell Box (Area Light)" // Load something simple
-#       endif
-        );
+    loadScene("White Cube");
+//    loadScene(
+//
+//#       ifndef G3D_DEBUG
+//        "G3D Sponza"
+//#       else
+//        "G3D Simple Cornell Box (Area Light)" // Load something simple
+//#       endif
+//        );
 
     // Make the GUI after the scene is loaded because loading/rendering/simulation initialize
     // some variables that advanced GUIs may wish to reference with pointers.
@@ -264,6 +264,7 @@ void App::makeGUI() {
 // for you to modify. If you aren't changing the hardware rendering strategy, you can
 // delete this override entirely.
 void App::onGraphics3D(RenderDevice* rd, Array<shared_ptr<Surface> >& allSurfaces) {
+
     if (! scene()) {
         if ((submitToDisplayMode() == SubmitToDisplayMode::MAXIMIZE_THROUGHPUT) && (!rd->swapBuffersAutomatically())) {
             swapBuffers();
