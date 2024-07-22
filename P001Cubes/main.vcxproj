@@ -92,9 +92,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="source\projectsSpecification.h" />
     <ClInclude Include="source\App.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\projectsSpecification.cpp" />
     <ClCompile Include="source\App.cpp" />
   </ItemGroup>
   <ItemGroup>
