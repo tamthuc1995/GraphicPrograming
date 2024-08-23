@@ -6,14 +6,16 @@
  */
 #pragma once
 #include <G3D/G3D.h>
+#include "projectsSpecification.h"
 
 #include <string> // Standard header
 #include <vector>
 
-
 /** \brief Application framework. */
 class App : public GApp {
 protected:
+    /** Add default parameters for app */
+    shared_ptr<projectsSpecification> proj_spec;
 
     /** Called from onInit */
     void makeGUI();

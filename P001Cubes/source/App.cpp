@@ -59,15 +59,27 @@ int main(int argc, const char* argv[]) {
     settings.screenCapture.includeG3DRevision = false;
     settings.screenCapture.filenamePrefix = "_";
     
-    // Project related run
-    projectsSpecification::create_staircase("staircases.Scene.Any");
-
 
     return App(settings).run();
 }
 
 
 App::App(const GApp::Settings& settings) : GApp(settings) {
+    shared_ptr<projectsSpecification> temp(new projectsSpecification());
+    proj_spec = temp;
+    proj_spec->setNumMeshes(600);
+    proj_spec->setHeightFieldYScale(50.0f);
+    proj_spec->setHeightFieldXZScale(4.0f);
+
+    proj_spec->setGlassParams("upper_inner_h", 3.0f);
+    proj_spec->setGlassParams("upper_thickness", 0.05f);
+    proj_spec->setGlassParams("mid_h", 5.0f);
+    proj_spec->setGlassParams("base_h", 0.2f);
+    proj_spec->setGlassParams("base_r", 1.0f);
+    proj_spec->setGlassParams("step_size", 0.1f);
+    proj_spec->setGlassParams("n_points_per_loop", 3.0f);
+
+
 }
 
 
@@ -99,20 +111,12 @@ void App::onInit() {
 
     showRenderingStats      = false;
     loadScene("White Cube");
-//    loadScene(
-//
-//#       ifndef G3D_DEBUG
-//        "G3D Sponza"
-//#       else
-//        "G3D Simple Cornell Box (Area Light)" // Load something simple
-//#       endif
-//        );
 
     // Make the GUI after the scene is loaded because loading/rendering/simulation initialize
     // some variables that advanced GUIs may wish to reference with pointers.
+
     makeGUI();
 }
-
 
 void App::makeGUI() {
     debugWindow->setVisible(true);
@@ -168,7 +172,8 @@ void App::makeGUI() {
             [&](bool b) {
                 const shared_ptr<DefaultRenderer>& r = dynamic_pointer_cast<DefaultRenderer>(m_renderer);
                 if (r) { r->setEnableGlossyGI(b); }
-            }));
+            })
+    );
     giPane->addCheckBox("Show Probes",
         Pointer<bool>([&]() {
             const shared_ptr<DefaultRenderer>& r = dynamic_pointer_cast<DefaultRenderer>(m_renderer);
@@ -197,13 +202,237 @@ void App::makeGUI() {
     rendererPane->moveRightOf(infoPane);
     rendererPane->moveBy(10, 0);
 
-    // More examples of debugging GUI controls:
-    // debugPane->addCheckBox("Use explicit checking", &explicitCheck);
-    // debugPane->addTextBox("Name", &myName);
-    // debugPane->addNumberBox("height", &height, "m", GuiTheme::LINEAR_SLIDER, 1.0f, 2.5f);
-    // button = debugPane->addButton("Run Simulator");
-    // debugPane->addButton("Generate Heightfield", [this](){ generateHeightfield(); });
-    // debugPane->addButton("Generate Heightfield", [this](){ makeHeightfield(imageName, scale, "model/heightfield.off"); });
+    shared_ptr<GuiWindow> window2 = GuiWindow::create("Generate Cylinder");
+    GuiPane* pane = window2->pane();
+    Pointer<int> ptr_num_meshes_cylinder(
+        [&]() {
+            const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+            if (notNull(r)) { return r->getNumMeshes(); }
+        },
+        [&](int b) {
+            const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+            if (notNull(r)) { r->setNumMeshes(b); }
+        }
+    );
+    pane->addNumberBox("Num meshes", ptr_num_meshes_cylinder, "", GuiTheme::LINEAR_SLIDER, 20, 1000);
+    pane->addButton("Generate", [this]() {
+        try {
+            projectsSpecification::makeCylinder("model/cylinder.off", proj_spec->getNumMeshes());
+            const ModelTable model_table = scene()->modelTable();
+            for (ModelTable::Iterator it = model_table.begin(); it.isValid(); ++it) {
+                const String name = it->key; 
+                const lazy_ptr<ArticulatedModel>& v = ((it->value).resolve());
+                v->clearCache();
+            }
+            scene()->clear();
+            scene()->load("Test Scene Cylinder OFF Meshes");
+        }
+        catch (...) {
+            msgBox("Unable create cylinder");
+        }
+        });
+    window2->pack();
+    addWidget(window2);
+
+
+
+    shared_ptr<GuiWindow> window3 = GuiWindow::create("Generate Heighfield");
+    GuiPane* heightfieldPane = window3->pane();
+
+    Pointer<float> ptr_heightfieldYScale(
+        [&]() {
+            const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+            if (notNull(r)) { return r->getHeightFieldYScale(); }
+        },
+        [&](float b) {
+            const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+            if (notNull(r)) { r->setHeightFieldYScale(b); }
+        }
+    );
+    heightfieldPane->addNumberBox("Max Y", ptr_heightfieldYScale, "m", GuiTheme::LOG_SLIDER, 0.0f, 100.0f)->setUnitsSize(30);
+
+    Pointer<float> ptr_heightfieldXZScale(
+        [&]() {
+            const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+            if (notNull(r)) { return r->getHeightFieldXZScale(); }
+        },
+        [&](float b) {
+            const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+            if (notNull(r)) { r->setHeightFieldXZScale(b); }
+        }
+    );
+    heightfieldPane->addNumberBox("XZ Scale", ptr_heightfieldXZScale, "m/px", GuiTheme::LOG_SLIDER, 0.001f, 10.0f)->setUnitsSize(30);
+
+    Pointer<String> ptr_heightfieldscource(
+        [&]() {
+            const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+            if (notNull(r)) { return r->getHeightFieldSource(); }
+        },
+        [&](String b) {
+            const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+            if (notNull(r)) { r->setHeightFieldSource(b); }
+        }
+    );
+    heightfieldPane->beginRow(); {
+        heightfieldPane->addTextBox("Input Image", ptr_heightfieldscource)->setWidth(210);
+        heightfieldPane->addButton("...", [this]() {
+            String filename;
+            FileDialog::getFilename(filename, "png", false);
+            proj_spec->setHeightFieldSource(filename);
+            })->setWidth(30);
+    } heightfieldPane->endRow();
+
+
+    heightfieldPane->addButton("Generate", [this]() {
+        shared_ptr<Image> image;
+        try {
+            image = Image::fromFile(proj_spec->getHeightFieldSource());
+            projectsSpecification::makeHeightField(
+                "model/heightfield.off", 
+                image, 
+                proj_spec->getHeightFieldYScale(), 
+                proj_spec->getHeightFieldXZScale()
+            );
+
+            // Clear cache
+            const ModelTable model_table = scene()->modelTable();
+            for (ModelTable::Iterator it = model_table.begin(); it.isValid(); ++it) {
+                const String name = it->key;
+                const lazy_ptr<ArticulatedModel>& v = ((it->value).resolve());
+                v->clearCache();
+            }
+            scene()->clear();
+            scene()->load("Test Scene Heightfield OFF Meshes");
+        }
+        catch (...) {
+            String m_heightfieldSource = proj_spec->getHeightFieldSource();
+            msgBox("Unable to load the image.", m_heightfieldSource);
+        }
+        });
+
+    window3->pack();
+    addWidget(window3);
+
+
+
+    shared_ptr<GuiWindow> window4 = GuiWindow::create("Generate Glass");
+    GuiPane* createGlassPane = window4->pane();
+
+
+    createGlassPane->addNumberBox("upper_inner_h", 
+        Pointer<float>(
+            [&]() {
+                const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+                if (notNull(r)) { return r->getGlassParams("upper_inner_h"); }
+            },
+            [&](float b) {
+                const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+                if (notNull(r)) { r->setGlassParams("upper_inner_h", b); }
+            }),
+        "", GuiTheme::LOG_SLIDER, 0.001f, 10.0f
+    )->setUnitsSize(30);
+
+    createGlassPane->addNumberBox("upper_thickness",
+        Pointer<float>(
+            [&]() {
+                const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+                if (notNull(r)) { return r->getGlassParams("upper_thickness"); }
+            },
+            [&](float b) {
+                const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+                if (notNull(r)) { r->setGlassParams("upper_thickness", b); }
+            }),
+        "", GuiTheme::LOG_SLIDER, 0.001f, 0.5f
+    )->setUnitsSize(30);
+
+    createGlassPane->addNumberBox("mid_h",
+        Pointer<float>(
+            [&]() {
+                const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+                if (notNull(r)) { return r->getGlassParams("mid_h"); }
+            },
+            [&](float b) {
+                const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+                if (notNull(r)) { r->setGlassParams("mid_h", b); }
+            }),
+        "", GuiTheme::LOG_SLIDER, 0.001f, 10.0f
+    )->setUnitsSize(30);
+
+    createGlassPane->addNumberBox("base_h",
+        Pointer<float>(
+            [&]() {
+                const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+                if (notNull(r)) { return r->getGlassParams("base_h"); }
+            },
+            [&](float b) {
+                const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+                if (notNull(r)) { r->setGlassParams("base_h", b); }
+            }),
+        "", GuiTheme::LOG_SLIDER, 0.001f, 1.0f
+    )->setUnitsSize(30);
+
+    createGlassPane->addNumberBox("base_r",
+        Pointer<float>(
+            [&]() {
+                const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+                if (notNull(r)) { return r->getGlassParams("base_r"); }
+            },
+            [&](float b) {
+                const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+                if (notNull(r)) { r->setGlassParams("base_r", b); }
+            }),
+        "", GuiTheme::LOG_SLIDER, 0.001f, 3.0f
+    )->setUnitsSize(30);
+
+    createGlassPane->addNumberBox("step_size",
+        Pointer<float>(
+            [&]() {
+                const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+                if (notNull(r)) { return r->getGlassParams("step_size"); }
+            },
+            [&](float b) {
+                const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+                if (notNull(r)) { r->setGlassParams("step_size", b); }
+            }),
+        "", GuiTheme::LOG_SLIDER, 0.001f, 1.0f
+    )->setUnitsSize(30);
+
+    createGlassPane->addNumberBox("n_points_per_loop",
+        Pointer<float>(
+            [&]() {
+                const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+                if (notNull(r)) { return r->getGlassParams("n_points_per_loop"); }
+            },
+            [&](float b) {
+                const shared_ptr<projectsSpecification>& r = dynamic_pointer_cast<projectsSpecification>(proj_spec);
+                if (notNull(r)) { r->setGlassParams("n_points_per_loop", b); }
+            }),
+        "", GuiTheme::LOG_SLIDER, 0.001f, 360.0f
+    )->setUnitsSize(30);
+
+    createGlassPane->addButton("Generate", [this]() {
+        try {
+            projectsSpecification::makeGlass("model/tallglass.off", proj_spec->getGlassParamsTable());
+            // Clear cache
+            const ModelTable model_table = scene()->modelTable();
+            for (ModelTable::Iterator it = model_table.begin(); it.isValid(); ++it) {
+                const String name = it->key;
+                const lazy_ptr<ArticulatedModel>& v = ((it->value).resolve());
+                v->clearCache();
+            }
+            scene()->clear();
+            scene()->load("Test Scene Tall Glass OFF Meshes");
+        }
+        catch (...) {
+
+            msgBox("Unable to creat tall glass. ");
+        }
+        });
+
+    window4->pack();
+    addWidget(window4);
+
+
 
     debugWindow->pack();
     debugWindow->setRect(Rect2D::xywh(0, 0, (float)window()->width(), debugWindow->rect().height()));
