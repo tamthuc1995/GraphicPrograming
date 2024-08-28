@@ -1,6 +1,5 @@
 /** \file App.cpp */
 #include "App.h"
-#include "projectsSpecification.h"
 
 // Tells C++ to invoke command-line main() function even on OS X and Win32.
 G3D_START_AT_MAIN();
@@ -79,6 +78,13 @@ App::App(const GApp::Settings& settings) : GApp(settings) {
     proj_spec->setGlassParams("step_size", 0.1f);
     proj_spec->setGlassParams("n_points_per_loop", 3.0f);
 
+
+    shared_ptr<RayTracer> temp_ray_tracer(new RayTracer());
+    my_ray_tracer = temp_ray_tracer;
+    my_ray_tracer->setResolution("160 x 160");
+    my_ray_tracer->setMultithreading(false);
+    my_ray_tracer->setFixedPrimitives(false);
+    my_ray_tracer->setNumIndirectRays(0);
 
 }
 
@@ -451,112 +457,118 @@ void App::makeGUI() {
 // This default implementation is a direct copy of GApp::onGraphics3D to make it easy
 // for you to modify. If you aren't changing the hardware rendering strategy, you can
 // delete this override entirely.
-//void App::onGraphics3D(RenderDevice* rd, Array<shared_ptr<Surface> >& allSurfaces) {
-//
-//    if (! scene()) {
-//        if ((submitToDisplayMode() == SubmitToDisplayMode::MAXIMIZE_THROUGHPUT) && (!rd->swapBuffersAutomatically())) {
-//            swapBuffers();
-//        }
-//        rd->clear();
-//        rd->pushState(); {
-//            rd->setProjectionAndCameraMatrix(activeCamera()->projection(), activeCamera()->frame());
-//            drawDebugShapes();
-//        } rd->popState();
-//        return;
-//    }
-//
-//    BEGIN_PROFILER_EVENT("App::onGraphics3D");
-//    GBuffer::Specification gbufferSpec = m_gbufferSpecification;
-//
-//    extendGBufferSpecification(gbufferSpec);
-//    m_gbuffer->setSpecification(gbufferSpec);
-//    m_gbuffer->resize(m_framebuffer->width(), m_framebuffer->height());
-//    m_gbuffer->prepare(rd, activeCamera(), 0, -(float)previousSimTimeStep(), m_settings.hdrFramebuffer.depthGuardBandThickness, m_settings.hdrFramebuffer.colorGuardBandThickness);
-//    debugAssertGLOk();
-//
-//    m_renderer->render(rd,
-//        activeCamera(),
-//        m_framebuffer,
-//        scene()->lightingEnvironment().ambientOcclusionSettings.enabled ? m_depthPeelFramebuffer : nullptr,
-//        scene()->lightingEnvironment(), m_gbuffer,
-//        allSurfaces,
-//        [&]() -> decltype(auto) { return scene()->tritree(); }); // decltype(auto) for correct return type deduction in the lambda.
-//
-//    // Debug visualizations and post-process effects
-//    rd->pushState(m_framebuffer); {
-//        // Call to make the App show the output of debugDraw(...)
-//        rd->setProjectionAndCameraMatrix(activeCamera()->projection(), activeCamera()->frame());
-//        drawDebugShapes();
-//        const shared_ptr<Entity>& selectedEntity = (notNull(developerWindow) && notNull(developerWindow->sceneEditorWindow)) ? developerWindow->sceneEditorWindow->selectedEntity() : nullptr;
-//        scene()->visualize(rd, selectedEntity, allSurfaces, sceneVisualizationSettings(), activeCamera());
-//
-//        onPostProcessHDR3DEffects(rd);
-//    } rd->popState();
-//
-//    // We're about to render to the actual back buffer, so swap the buffers now.
-//    // This call also allows the screenshot and video recording to capture the
-//    // previous frame just before it is displayed.
-//    if (submitToDisplayMode() == SubmitToDisplayMode::MAXIMIZE_THROUGHPUT) {
-//        swapBuffers();
-//    }
-//
-//    // Clear the entire screen (needed even though we'll render over it, since
-//    // AFR uses clear() to detect that the buffer is not re-used.)
-//    rd->clear();
-//
-//    // Perform gamma correction, bloom, and AA, and write to the native window frame buffer
-//    m_film->exposeAndRender(rd, activeCamera()->filmSettings(), m_framebuffer->texture(0), 
-//        settings().hdrFramebuffer.trimBandThickness().x,
-//        settings().hdrFramebuffer.depthGuardBandThickness.x,
-//        Texture::opaqueBlackIfNull(notNull(m_gbuffer) ? m_gbuffer->texture(GBuffer::Field::SS_POSITION_CHANGE) : nullptr),
-//        activeCamera()->jitterMotion());
-//    END_PROFILER_EVENT();
-//}
+void App::onGraphics3D(RenderDevice* rd, Array<shared_ptr<Surface> >& allSurfaces) {
 
-void App::onGraphics(RenderDevice* rd, Array<shared_ptr<Surface> >& surface3D, Array<shared_ptr<Surface2D> >& surface2D) {
-    // Show animations by forcing this always to true. Remove to reduce CPU load
-    //m_forceRender = true;
-
-    // Update the preview image only while moving
-    if ((!m_prevCFrame.fuzzyEq(m_debugCamera->frame())) || m_forceRender) {
-        onRender();
-        m_prevCFrame = m_debugCamera->frame();
-        m_forceRender = false;
+    if (! scene()) {
+        if ((submitToDisplayMode() == SubmitToDisplayMode::MAXIMIZE_THROUGHPUT) && (!rd->swapBuffersAutomatically())) {
+            swapBuffers();
+        }
+        rd->clear();
+        rd->pushState(); {
+            rd->setProjectionAndCameraMatrix(activeCamera()->projection(), activeCamera()->frame());
+            drawDebugShapes();
+        } rd->popState();
+        return;
     }
 
-    if (m_result) {
-        rd->push2D(); {
-            Draw::rect2D(rd->viewport(), rd, Color3::white(), m_result);
-        } rd->pop2D();
+    BEGIN_PROFILER_EVENT("App::onGraphics3D");
+    GBuffer::Specification gbufferSpec = m_gbufferSpecification;
+    // new
+    onRender();
+    m_framebuffer = Framebuffer::create(m_result);
+
+    extendGBufferSpecification(gbufferSpec);
+    m_gbuffer->setSpecification(gbufferSpec);
+    m_gbuffer->resize(m_framebuffer->width(), m_framebuffer->height());
+    m_gbuffer->prepare(rd, activeCamera(), 0, -(float)previousSimTimeStep(), m_settings.hdrFramebuffer.depthGuardBandThickness, m_settings.hdrFramebuffer.colorGuardBandThickness);
+    debugAssertGLOk();
+
+    //m_renderer->render(rd,
+    //    activeCamera(),
+    //    m_framebuffer,
+    //    scene()->lightingEnvironment().ambientOcclusionSettings.enabled ? m_depthPeelFramebuffer : nullptr,
+    //    scene()->lightingEnvironment(), m_gbuffer,
+    //    allSurfaces,
+    //    [&]() -> decltype(auto) { return scene()->tritree(); }); // decltype(auto) for correct return type deduction in the lambda.
+
+
+    // Debug visualizations and post-process effects
+    rd->pushState(m_framebuffer); {
+        // Call to make the App show the output of debugDraw(...)
+        rd->setProjectionAndCameraMatrix(activeCamera()->projection(), activeCamera()->frame());
+        drawDebugShapes();
+        const shared_ptr<Entity>& selectedEntity = (notNull(developerWindow) && notNull(developerWindow->sceneEditorWindow)) ? developerWindow->sceneEditorWindow->selectedEntity() : nullptr;
+        scene()->visualize(rd, selectedEntity, allSurfaces, sceneVisualizationSettings(), activeCamera());
+
+        onPostProcessHDR3DEffects(rd);
+    } rd->popState();
+
+    // We're about to render to the actual back buffer, so swap the buffers now.
+    // This call also allows the screenshot and video recording to capture the
+    // previous frame just before it is displayed.
+    if (submitToDisplayMode() == SubmitToDisplayMode::MAXIMIZE_THROUGHPUT) {
+        swapBuffers();
     }
 
-    Surface2D::sortAndRender(rd, surface2D);
+    // Clear the entire screen (needed even though we'll render over it, since
+    // AFR uses clear() to detect that the buffer is not re-used.)
+    rd->clear();
+    // Perform gamma correction, bloom, and AA, and write to the native window frame buffer
+    m_film->exposeAndRender(rd, activeCamera()->filmSettings(), m_framebuffer->texture(0),
+        settings().hdrFramebuffer.trimBandThickness().x,
+        settings().hdrFramebuffer.depthGuardBandThickness.x,
+        Texture::opaqueBlackIfNull(notNull(m_gbuffer) ? m_gbuffer->texture(GBuffer::Field::SS_POSITION_CHANGE) : nullptr),
+        activeCamera()->jitterMotion());
+    END_PROFILER_EVENT();
 }
 
+//void App::onGraphics(RenderDevice* rd, Array<shared_ptr<Surface> >& surface3D, Array<shared_ptr<Surface2D> >& surface2D) {
+//    // Show animations by forcing this always to true. Remove to reduce CPU load
+//    //m_forceRender = true;
+//
+//    // Update the preview image only while moving
+//    if ((!m_prevCFrame.fuzzyEq(m_debugCamera->frame())) || m_forceRender) {
+//        onRender();
+//        m_prevCFrame = m_debugCamera->frame();
+//        m_forceRender = false;
+//    }
+//
+//    if (m_result) {
+//        rd->push2D(); {
+//            Draw::rect2D(rd->viewport(), rd, Color3::white(), m_result);
+//        } rd->pop2D();
+//    }
+//
+//    Surface2D::sortAndRender(rd, surface2D);
+//}
+
 void App::onRender() {
-    const int width = int(window()->width());
-    const int height = int(window()->height());
+    const String resolution = my_ray_tracer->getResolution();
+    const Vector2int32 size = Vector2int32::parseResolution(resolution);
+
+    //const int width = int(window()->width() * 0.1);
+    //const int height = int(window()->height() * 0.1);
+    const int width = int(size.x);
+    const int height = int(size.y);
 
     if (isNull(m_currentImage) || (m_currentImage->width() != width) || (m_currentImage->height() != height)) {
         m_currentImage = Image3::createEmpty(width, height);
     }
 
-    for (Point2int32 point; point.y < height; ++point.y) {
-        for (point.x = 0; point.x < width; ++point.x) {
-            m_currentImage->set(point.x, point.y, Radiance3::one());
-        }
-    }
+    my_ray_tracer->rayTraceImage(m_currentImage, m_debugCamera);
 
     // Post-process
     const shared_ptr<PixelTransferBuffer>& ptb = CPUPixelTransferBuffer::fromData(m_currentImage->width(), m_currentImage->height(), ImageFormat::RGB32F(), m_currentImage->getCArray(), 1, 1);
-    const shared_ptr<Texture>& src = Texture::fromPixelTransferBuffer("Source", ptb, ImageFormat::RGB32F(), Texture::DIM_2D, false);
-    if (m_result) {
-        m_result->resize(width, height);
-    }
+    //const shared_ptr<Texture>& m_result = Texture::fromPixelTransferBuffer("Source", ptb, ImageFormat::RGB32F(), Texture::DIM_2D, false);
+    m_result = Texture::fromPixelTransferBuffer("Source", ptb, ImageFormat::RGB32F(), Texture::DIM_2D, false);
+    m_result->setName("m_result_");
+    //if (m_result) {
+    //    m_result->resize(width, height);
+    //}
 
-    m_film->exposeAndRender(renderDevice, m_debugCamera->filmSettings(), src,
-        settings().hdrFramebuffer.trimBandThickness().x,
-        settings().hdrFramebuffer.depthGuardBandThickness.x, m_result);
+    //m_film->exposeAndRender(renderDevice, m_debugCamera->filmSettings(), src,
+    //    settings().hdrFramebuffer.trimBandThickness().x,
+    //    settings().hdrFramebuffer.depthGuardBandThickness.x, m_result);
 
 }
 

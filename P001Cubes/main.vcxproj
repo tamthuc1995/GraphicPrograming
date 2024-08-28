@@ -92,10 +92,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="source\RayTracer.h" />
     <ClInclude Include="source\projectsSpecification.h" />
     <ClInclude Include="source\App.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="source\RayTracer.cpp" />
     <ClCompile Include="source\projectsSpecification.cpp" />
     <ClCompile Include="source\App.cpp" />
   </ItemGroup>
