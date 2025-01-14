@@ -25,5 +25,5 @@ set(TINYCTHREAD "${GLFW_SOURCE_DIR}/deps/tinycthread.h"
 
 ###############
 set(SOURCE_FILES src/main.cpp src/glad.c)
-add_executable(hellowork ${SOURCE_FILES} ${TINYCTHREAD} ${GETOPT} ${GLAD} )
+add_executable(hellowork ${SOURCE_FILES} ${TINYCTHREAD} ${GETOPT} ${GLAD})
 target_link_libraries(hellowork glfw ${GLFW_LIBRARIES})
