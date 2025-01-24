@@ -37,8 +37,10 @@ file(COPY src/Chap1.GettingStarted/shader_source.vs src/Chap1.GettingStarted/sha
 
 ###############
 set(SOURCE_FILES_CHAP1P5 src/glad.c src/Chap1.GettingStarted/chap1P5.cpp src/Chap1.GettingStarted/shader/shader.h src/Chap1.GettingStarted/shader/shader.cpp)
+file(COPY src/Chap1.GettingStarted/shader_source_p5.vs src/Chap1.GettingStarted/shader_source_p5.fs DESTINATION ${CMAKE_BINARY_DIR}/chap1p5)
+file(COPY src/Chap1.GettingStarted/materials/container.jpg src/Chap1.GettingStarted/materials/awesomeface.png DESTINATION ${CMAKE_BINARY_DIR}/chap1p5)
+configure_file(${CMAKE_SOURCE_DIR}/src/Chap1.GettingStarted/shader_source_p5.vs ${CMAKE_BINARY_DIR}/chap1p5/shader_source_p5.vs)
+configure_file(${CMAKE_SOURCE_DIR}/src/Chap1.GettingStarted/shader_source_p5.fs ${CMAKE_BINARY_DIR}/chap1p5/shader_source_p5.fs)
 add_executable(chap1p5 ${SOURCE_FILES_CHAP1P5} ${TINYCTHREAD} ${GETOPT} ${GLAD} ${STB})
 target_link_libraries(chap1p5 glfw ${GLFW_LIBRARIES})
 set_target_properties(chap1p5 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/chap1p5)
-file(COPY src/Chap1.GettingStarted/shader_source_p5.vs src/Chap1.GettingStarted/shader_source_p5.fs DESTINATION ${CMAKE_BINARY_DIR}/chap1p5)
-file(COPY src/Chap1.GettingStarted/materials/container.jpg DESTINATION ${CMAKE_BINARY_DIR}/chap1p5)
