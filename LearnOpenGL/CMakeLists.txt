@@ -17,6 +17,9 @@ include_directories(src)
 
 ###
 set(GLAD "include/glad/glad.h")
+set(STB "include/stb/stb_image.h"
+        "include/stb/stb_image.cpp")
+
 set(GETOPT "${GLFW_SOURCE_DIR}/deps/getopt.h"
            "${GLFW_SOURCE_DIR}/deps/getopt.c")
 set(TINYCTHREAD "${GLFW_SOURCE_DIR}/deps/tinycthread.h"
@@ -24,9 +27,18 @@ set(TINYCTHREAD "${GLFW_SOURCE_DIR}/deps/tinycthread.h"
 
 
 ###############
-set(SOURCE_FILES_CHAP1 src/glad.c src/Chap1.GettingStarted/chap1.cpp src/Chap1.GettingStarted/shader/shader.h src/Chap1.GettingStarted/shader/shader.cpp)
-add_executable(chap1 ${SOURCE_FILES_CHAP1} ${TINYCTHREAD} ${GETOPT} ${GLAD})
-target_link_libraries(chap1 glfw ${GLFW_LIBRARIES})
-set_target_properties(chap1 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/chap1)
-file(COPY src/Chap1.GettingStarted/shader_source.vs src/Chap1.GettingStarted/shader_source.fs 
-     DESTINATION ${CMAKE_BINARY_DIR}/chap1)
+set(SOURCE_FILES_CHAP1P4 src/glad.c src/Chap1.GettingStarted/chap1P4.cpp src/Chap1.GettingStarted/shader/shader.h src/Chap1.GettingStarted/shader/shader.cpp)
+add_executable(chap1p4 ${SOURCE_FILES_CHAP1P4} ${TINYCTHREAD} ${GETOPT} ${GLAD})
+target_link_libraries(chap1p4 glfw ${GLFW_LIBRARIES})
+set_target_properties(chap1p4 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/chap1p4)
+file(COPY src/Chap1.GettingStarted/shader_source.vs src/Chap1.GettingStarted/shader_source.fs DESTINATION ${CMAKE_BINARY_DIR}/chap1p4)
+
+
+
+###############
+set(SOURCE_FILES_CHAP1P5 src/glad.c src/Chap1.GettingStarted/chap1P5.cpp src/Chap1.GettingStarted/shader/shader.h src/Chap1.GettingStarted/shader/shader.cpp)
+add_executable(chap1p5 ${SOURCE_FILES_CHAP1P5} ${TINYCTHREAD} ${GETOPT} ${GLAD} ${STB})
+target_link_libraries(chap1p5 glfw ${GLFW_LIBRARIES})
+set_target_properties(chap1p5 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/chap1p5)
+file(COPY src/Chap1.GettingStarted/shader_source_p5.vs src/Chap1.GettingStarted/shader_source_p5.fs DESTINATION ${CMAKE_BINARY_DIR}/chap1p5)
+file(COPY src/Chap1.GettingStarted/materials/container.jpg DESTINATION ${CMAKE_BINARY_DIR}/chap1p5)
