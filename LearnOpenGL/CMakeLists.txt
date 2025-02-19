@@ -84,3 +84,24 @@ configure_file(${CMAKE_SOURCE_DIR}/src/Chap1.GettingStarted/shader_source_p8.fs 
 add_executable(chap1p8 ${SOURCE_FILES_CHAP1P8} ${TINYCTHREAD} ${GETOPT} ${GLAD} ${STB})
 target_link_libraries(chap1p8 glfw ${GLFW_LIBRARIES})
 set_target_properties(chap1p8 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/chap1p8)
+
+
+###############
+set(SOURCE_FILES_CHAP2P01 
+        src/glad.c 
+        src/Chap2.Light/chap2p01.cpp 
+        src/Chap2.Light/shader/shader.h 
+        src/Chap2.Light/shader/shader.cpp 
+        src/Chap2.Light/camera/camera.h 
+        src/Chap2.Light/camera/camera.cpp
+)
+file(COPY src/Chap2.Light/shader_light_source_p1.vs src/Chap2.Light/shader_light_source_p1.fs DESTINATION ${CMAKE_BINARY_DIR}/chap2p01)
+file(COPY src/Chap2.Light/shader_source_p1.vs src/Chap2.Light/shader_source_p1.fs DESTINATION ${CMAKE_BINARY_DIR}/chap2p01)
+file(COPY src/Chap2.Light/materials/container.jpg src/Chap2.Light/materials/awesomeface.png DESTINATION ${CMAKE_BINARY_DIR}/chap2p01)
+configure_file(${CMAKE_SOURCE_DIR}/src/Chap2.Light/shader_light_source_p1.vs ${CMAKE_BINARY_DIR}/chap1p6/shader_light_source_p1.vs)
+configure_file(${CMAKE_SOURCE_DIR}/src/Chap2.Light/shader_light_source_p1.fs ${CMAKE_BINARY_DIR}/chap1p6/shader_light_source_p1.fs)
+configure_file(${CMAKE_SOURCE_DIR}/src/Chap2.Light/shader_source_p1.vs ${CMAKE_BINARY_DIR}/chap1p6/shader_source_p1.vs)
+configure_file(${CMAKE_SOURCE_DIR}/src/Chap2.Light/shader_source_p1.fs ${CMAKE_BINARY_DIR}/chap1p6/shader_source_p1.fs)
+add_executable(chap2p01 ${SOURCE_FILES_CHAP2P01} ${TINYCTHREAD} ${GETOPT} ${GLAD} ${STB})
+target_link_libraries(chap2p01 glfw ${GLFW_LIBRARIES})
+set_target_properties(chap2p01 PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/chap2p01)
