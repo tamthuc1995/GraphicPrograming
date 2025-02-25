@@ -97,7 +97,7 @@ set(SOURCE_FILES_CHAP2P01
 )
 file(COPY src/Chap2.Light/shader_light_source_p1.vs src/Chap2.Light/shader_light_source_p1.fs DESTINATION ${CMAKE_BINARY_DIR}/chap2p01)
 file(COPY src/Chap2.Light/shader_source_p1.vs src/Chap2.Light/shader_source_p1.fs DESTINATION ${CMAKE_BINARY_DIR}/chap2p01)
-file(COPY src/Chap2.Light/materials/container.jpg src/Chap2.Light/materials/awesomeface.png DESTINATION ${CMAKE_BINARY_DIR}/chap2p01)
+file(COPY src/Chap2.Light/materials/container.jpg src/Chap2.Light/materials/container2.png src/Chap2.Light/materials/container2_specular.png src/Chap2.Light/materials/awesomeface.png DESTINATION ${CMAKE_BINARY_DIR}/chap2p01)
 configure_file(${CMAKE_SOURCE_DIR}/src/Chap2.Light/shader_light_source_p1.vs ${CMAKE_BINARY_DIR}/chap1p6/shader_light_source_p1.vs)
 configure_file(${CMAKE_SOURCE_DIR}/src/Chap2.Light/shader_light_source_p1.fs ${CMAKE_BINARY_DIR}/chap1p6/shader_light_source_p1.fs)
 configure_file(${CMAKE_SOURCE_DIR}/src/Chap2.Light/shader_source_p1.vs ${CMAKE_BINARY_DIR}/chap1p6/shader_source_p1.vs)
