@@ -181,7 +181,6 @@ int main()
 
     //
     myLightingSourceShader.use();
-    myLightingSourceShader.setVec3("lightCubeColor", 1.0f, 1.0f, 1.0f);
 
     // 
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
@@ -226,12 +225,12 @@ int main()
         myShader.setFloat("material.shininess", 32.0f);
 
         glm::vec3 lightColor;
-        lightColor.x = sin(glfwGetTime() * 2.0f);
-        lightColor.y = sin(glfwGetTime() * 0.7f);
-        lightColor.z = sin(glfwGetTime() * 1.3f);
+        lightColor.x = (sin(t) + 1.0f ) * 0.4f + 0.2f;
+        lightColor.y = (sin(t) + 1.0f ) * 0.4f + 0.2f;
+        lightColor.z = (sin(t) + 1.0f ) * 0.4f + 0.2f;
         
-        glm::vec3 diffuseColor = lightColor   * glm::vec3(0.5f); 
-        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); 
+        glm::vec3 diffuseColor = lightColor   * glm::vec3(1.0f); 
+        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.7f); 
         
         myShader.setVec3("light.ambient", ambientColor);
         myShader.setVec3("light.diffuse", diffuseColor);
