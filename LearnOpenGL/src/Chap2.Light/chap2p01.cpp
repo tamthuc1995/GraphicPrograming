@@ -237,13 +237,43 @@ int main()
 
         myShader.use();
 
+        float t(glfwGetTime());
         float radius(4.0f);
-        float rad(glfwGetTime());
-        glm::vec3 lightPos(radius * sin(rad), 0.0f, radius * cos(rad));
-
-        myShader.setVec3("lightColor",  1.0f, 1.0f, 1.0f);
+        float rad1(t*glm::radians(270.0f));
+        float rad2(glm::radians(45.0f));
+        glm::vec3 origin(
+            sin(t*glm::radians(90.0f))*2.0f,
+            -sin(t*glm::radians(90.0f))*2.0f,
+            sin(t*glm::radians(90.0f))*2.0f
+        );
+        glm::vec3 lightPos(
+            radius * sin(rad1) * sin(rad2), 
+            radius * sin(rad1) * cos(rad2), 
+            radius * cos(rad1)
+        );
+        lightPos = lightPos + origin;
+        
         myShader.setVec3("lightPos", lightPos);
-        myShader.setVec3("viewPos", myCamera.Position);
+        // myShader.setVec3("lightColor",  1.0f, 1.0f, 1.0f);
+        // myShader.setVec3("viewPos", myCamera.Position);
+
+        myShader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+        myShader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+        myShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+        myShader.setFloat("material.shininess", 32.0f);
+
+        glm::vec3 lightColor;
+        lightColor.x = sin(glfwGetTime() * 2.0f);
+        lightColor.y = sin(glfwGetTime() * 0.7f);
+        lightColor.z = sin(glfwGetTime() * 1.3f);
+        
+        glm::vec3 diffuseColor = lightColor   * glm::vec3(0.5f); 
+        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); 
+        
+        myShader.setVec3("light.ambient", ambientColor);
+        myShader.setVec3("light.diffuse", diffuseColor);
+        myShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f); 
+
 
         glBindVertexArray(VAO);
         for (unsigned int i = 0; i < 10; i++)
