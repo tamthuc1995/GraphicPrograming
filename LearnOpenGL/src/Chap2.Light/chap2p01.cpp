@@ -211,8 +211,8 @@ int main()
     glEnableVertexAttribArray(0);
 
     //
-    glm::vec3 lightPos(1.0f, 1.0f, 3.0f);
-
+    myLightingSourceShader.use();
+    myLightingSourceShader.setVec3("lightCubeColor", 1.0f, 1.0f, 1.0f);
 
     // 
     glBindBuffer(GL_ARRAY_BUFFER, 0); 
@@ -226,7 +226,7 @@ int main()
         processInput(window);
 
         // //
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
 
         // //
@@ -236,7 +236,6 @@ int main()
         glBindTexture(GL_TEXTURE_2D, texture2);
 
         myShader.use();
-
         float t(glfwGetTime());
         float radius(4.0f);
         float rad1(t*glm::radians(270.0f));
@@ -288,7 +287,9 @@ int main()
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
 
+
         myLightingSourceShader.use();
+        myLightingSourceShader.setVec3("lightColor", lightColor);
         myLightingSourceShader.setMat4("projection", projection);
         myLightingSourceShader.setMat4("view", view);
         model = glm::mat4(1.0f);

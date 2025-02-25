@@ -49,7 +49,7 @@ void main()
     vec3 specular = (material.specular * spec) * light.specular;  
 
     //
-    vec3 result = (ambient + diffuse + specular);
+    vec3 result = (ambient + diffuse + specular) * objectColor;
     FragColor = vec4(result, 1.0);
 
 }
