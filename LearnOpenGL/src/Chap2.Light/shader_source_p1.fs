@@ -16,10 +16,15 @@ uniform Material material;
 
 struct Light {
     vec3 position;
-  
+    
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    float constant;
+    float linear;
+    float quadratic;
+
 };
 
 uniform Light light;  
@@ -44,6 +49,14 @@ void main()
     vec3 specular = (specular_map * spec) * light.specular;  
 
     //
+    float distance    = length(LightPos - FragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + 
+                    light.quadratic * (distance * distance));
+
+    ambient  *= attenuation; 
+    diffuse  *= attenuation;
+    specular *= attenuation;  
+
     vec3 result = (ambient + diffuse + specular);
     FragColor = vec4(result, 1.0);
 
